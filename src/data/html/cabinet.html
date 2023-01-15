@@ -1,0 +1,53 @@
+<html xmlns:act="http://www.ujf-grenoble.fr/l3miage/actes" xmlns:cab="http://www.ujf-grenoble.fr/l3miage/medical" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Infirmiere 001</title>
+        <script type="text/javascript">
+                    function openFacture(prenom, nom, actes) {
+                    var width  = 500;
+                    var height = 300;
+                    if(window.innerWidth) {
+                    var left = (window.innerWidth-width)/2;
+                    var top = (window.innerHeight-height)/2;
+                    }
+                    else {
+                    var left = (document.body.clientWidth-width)/2;
+                    var top = (document.body.clientHeight-height)/2;
+                    }
+                    var factureWindow = window.open('','facture','menubar=yes, scrollbars=yes, top='+top+', left='+left+', width='+width+', height='+height+'');
+                    factureText = "Facture pour : " + prenom + " " + nom;
+                    factureWindow.document.write(factureText);
+                    }
+                </script>
+    </head>
+    <body>
+          
+                
+                Bonjour Sarah
+        <br>
+                        Aujourd'hui, vous avez 1 patient(s) 
+        <br>
+        <br>
+        <b>Patient 1/1:</b>
+        <br>
+                Nom : Al&eacute;cole
+        <br>
+                Pr&eacute;nom : Yvon
+        <br>
+                Adresse : 50 avenue F&eacute;lix Viallet 38031, Grenoble
+        <br>
+                Soins &agrave; effectuer : 
+        <br>
+                    Injection sous-cutan&eacute;e.
+        
+        <br>
+        <br>
+        <input type="Submit" value="Facture" onclick="
+                openFacture('Yvon',
+                'Al&eacute;cole',
+                '')
+            ">
+        <br>
+        <br>
+    </body>
+</html>

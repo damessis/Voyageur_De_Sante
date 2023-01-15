@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XmlSchema.xsd to edit this template
+-->
+
+<schema version="1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:m="http://www.ujf-grenoble.fr/l3miage/medical"
+        targetNamespace="http://www.ujf-grenoble.fr/l3miage/medical"
+        elementFormDefault="qualified">
+    
+    <!-- Racine cabinet de type m:Cabinet du fichier cabinetInfirmier.xml
+         avec une contrainte d'existence sur l'intervenant de la visite selon m:idInfirmierKey -->
+    <element name="cabinet" type="m:Cabinet">
+        <keyref name="intervenantExist" refer="m:idInfirmierKey">
+                <selector xpath="m:patients/m:patient/m:visite"/>
+                <field xpath="@intervenant"/>
+        </keyref>
+    </element>
+
+
+    <!-- Définition du type Complexe Cabinet composé :
+            - d'un nom (string)
+            - d'une adresse (m:Adresse)
+            - d'infirmiers (m:Infirmiers)
+            - de patients (m:Patients)
+         Contrainte d'unicité sur l'id de m:infirmiers/m:infirmier[@id] -->
+    <complexType name="Cabinet">
+        <sequence>
+            <element name="nom" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="adresse" type="m:Adresse"  minOccurs="1" maxOccurs="1"/>
+            <element name="infirmiers" type="m:Infirmiers" minOccurs="1" maxOccurs="1">
+               <unique name = "idInfirmierKey">
+                    <selector xpath = "m:infirmier"/>
+                    <field xpath = "@id"/>
+                </unique>
+            </element>
+            
+            <element name="patients" type="m:Patients" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe Adresse composé
+            - d'un étage (int) (facultatif)
+            - d'un numéro (int)
+            - d'une rue (string)
+            - d'une ville (string)
+            - d'un code postal (int à 5 chiffres)-->
+    <complexType name="Adresse">
+        <sequence>
+            <element name="étage" type="integer" minOccurs="0" maxOccurs="1"/>
+            <element name="numéro" type="integer" minOccurs="0" maxOccurs="1"/>
+            <element name="rue" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="ville" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="codePostal" type="m:CodePostal" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe Infirmiers composé :
+            - d'un ou plusieurs infirmier (m:Infirmier) -->
+    <complexType name="Infirmiers">
+        <sequence>
+            <element name="infirmier" type="m:Infirmier" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+
+    <!-- Définition du type Complexe Infirmier composé :
+            - d'un nom (m:NomPropre)
+            - d'un prenom (m:NomPropre)
+            - d'une photo (m:Photo)
+         et comme attribut :
+            - un id (m:IDInfirmier) (obligatoire) -->
+    <complexType name="Infirmier">
+        <sequence>
+            <element name="nom" type="m:NomPropre"/>
+            <element name="prénom" type="m:NomPropre"/>
+            <element name="photo" type="m:Photo"/>
+        </sequence>
+        
+        <attribute name="id" type="m:IDInfirmier" use="required"/>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe Patients composé :
+            - d'un ou plusieurs patient (m:PatientCabinet)    -->
+    <complexType name="Patients">
+        <sequence>
+            <element name="patient" type="m:PatientCabinet" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe PatientCabinet utilisé pour le fichier cabinetInfirmier.xml composé :
+            - d'un nom (m:NomPropre)
+            - d'un prénom (m:NomPropre)
+            - d'un sexe (m:Sexe)
+            - d'une date de naissance : naissance (date)
+            - d'un numéro de SS : numero (m:NumeroSS)
+            - d'une adresse (m:Adresse)
+            - d'une ou plusieurs visite (m:Visite) -->
+    <complexType name="PatientCabinet">
+        <sequence>
+            <element name="nom" type="m:NomPropre" minOccurs="1" maxOccurs="1"/>
+            <element name="prénom" type="m:NomPropre" minOccurs="1" maxOccurs="1"/>
+            <element name="sexe" type="m:Sexe" minOccurs="1" maxOccurs="1"/>
+            <element name="naissance" type="date" minOccurs="1" maxOccurs="1"/>
+            <element name="numéro" type="m:NumeroSS" minOccurs="1" maxOccurs="1"/>
+            <element name="adresse" type="m:Adresse" minOccurs="1" maxOccurs="1"/>
+            <element name="visite" type="m:Visite" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe Visite composé :
+            - d'un ou plusieurs acte (m:ActeID)
+         et d'attributs :
+            - date (date)
+            - d'un intervenant (m:IDInfirmier) (facultatif) -->
+    <complexType name="Visite">
+        <sequence>
+            <element name="acte" type="m:ActeID" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+        
+        <attribute name="date" type="date" use="required"/>
+        <attribute name="intervenant" type="m:IDInfirmier"/>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe ActeID composé :
+         d'un attribut :
+            - id (m:IDActe) (obligatoire) -->
+    <complexType name="ActeID">
+        <attribute name="id" type="m:IDActe" use="required"/>
+    </complexType>
+    
+    
+    <!-- Définition du type Simple NomPropre 
+            Restriction string :
+                - nom commençant par une majuscule -->
+    <simpleType name="NomPropre">
+        <restriction base="string">
+            <pattern value="[A-Z][a-zA-Zéèêëàïîôù\-]*"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Simple CodePostal
+            Restrictions string :
+                - taille : 5
+                - que des chiffres -->
+    <simpleType name="CodePostal">
+        <restriction base="string">
+            <pattern value="[0-9]*"/>
+            <minLength value="5"/>
+            <maxLength value="5"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Simple Photo
+            Restriction string :
+                - fini par ".png" ou ".jpg" -->
+    <simpleType name="Photo">
+        <restriction base="string">
+            <pattern value="[\S]*(.png|.jpg)"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Simple Sexe
+            Restriction string :
+               - soit M, soit F -->
+    <simpleType name="Sexe">
+        <restriction base="string">
+            <pattern value="(M|F)"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Symple NumeroSS
+            Restriction string :
+                - taille : 15
+                - que des chiffres
+            Pattern :
+                - Sexe : 1,2
+                - Année de naissance : 2 derniers chiffres de l'année
+                - Mois de naissance : de 01 à 12
+                - Département de naissance : 2 chiffres ou 2A ou 2B
+                - Commune de naissance : 3 chiffres
+                - Numéro d'ordre : 3 chiffres
+                - Clé de contrôle : 2 chiffres -->
+    <simpleType name="NumeroSS">
+        <restriction base="string">
+            <pattern value="(1|2)[0-9]{2}((0[1-9])|(1[0-2]))([0-9]{2}|2A|2B)[0-9]{8}"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Simple IDInfirmier
+            Restriction string :
+                - taille : 3
+                - que des chiffres
+                - tous sauf 000 -->
+    <simpleType name="IDInfirmier">
+        <restriction base="string">
+            <pattern value="00[1-9]|0[1-9][0-9]|[1-9][0-9]{2}"/>
+        </restriction>
+    </simpleType>
+    
+    
+    <!-- Définition du type Simple IDActe
+            Restriction string :
+                - listes des id :
+                    - de 101 à 113
+                    - de 200 à 204
+                    - de 300 à 303
+                    - de 401 à 403    -->
+    <simpleType name="IDActe">
+        <restriction base="string">
+            <pattern value="10[1-9]|11[0-3]|20[0-4@]|30[0-3]|40[1-3]"/>
+        </restriction>
+    </simpleType>
+    
+</schema>

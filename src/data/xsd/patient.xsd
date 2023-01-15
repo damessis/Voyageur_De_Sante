@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XmlSchema.xsd to edit this template
+-->
+
+<schema version="1.0"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           xmlns:cab="http://www.ujf-grenoble.fr/l3miage/medical"
+           targetNamespace="http://www.ujf-grenoble.fr/l3miage/medical"
+           elementFormDefault="qualified">
+    
+    <include schemaLocation="cabinet.xsd"/>
+    
+    <!-- Racine patient de type cab:Patient des fichiers patient_NomPatient.xml -->
+    <element name="patient" type="cab:Patient"/>
+    
+    <!-- Définition du type Complexe Patient utilisé pour les fichiers patient_NomPatient.xml composé :
+            - d'un nom (cab:NomPropre)
+            - d'un prénom (cab:NomPropre)
+            - d'un sexe (cab:Sexe)
+            - d'une date de naissance : naissance (date)
+            - d'un numéroSS (cab:NumeroSS)
+            - d'une adresse (cab:Adresse)
+            - d'une ou plusieurs visite (m:Visite) -->
+    <complexType name="Patient">
+        <sequence>
+            <element name="nom" type="cab:NomPropre" minOccurs="1" maxOccurs="1"/>
+            <element name="prénom" type="cab:NomPropre" minOccurs="1" maxOccurs="1"/>
+            <element name="sexe" type="cab:Sexe" minOccurs="1" maxOccurs="1"/>
+            <element name="naissance" type="date" minOccurs="1" maxOccurs="1"/>
+            <element name="numéroSS" type="cab:NumeroSS" minOccurs="1" maxOccurs="1"/>
+            <element name="adresse" type="cab:Adresse" minOccurs="1" maxOccurs="1"/>
+            <element name="visite" type="cab:VisitePatient" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe VisitePatient composé :
+            - d'un intervenant (cab:Intervenant) (facultatif)
+            - d'un ou plusieurs acte (string)
+            et d'un attribut :
+                - date (date) (obligatoire) -->
+    <complexType name="VisitePatient">
+        <sequence>
+            <element name="intervenant" type="cab:Intervenant" minOccurs="0" maxOccurs="1"/>
+            <element name="acte" type="string" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="date" type="date" use="required"/>
+    </complexType>
+    
+    
+    <!-- Définition du type Complexe Intervenant composé :
+            - d'un nom (cab:NomPropre)
+            - d'un prénom (cab:NomPropre) -->
+    <complexType name="Intervenant">
+        <sequence>
+            <element name="nom" type="cab:NomPropre" minOccurs="1" maxOccurs="1"/>
+            <element name="prénom" type="cab:NomPropre" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+
+</schema>
